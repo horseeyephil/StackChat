@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import store, {gotMessagesFromServer} from '../store'
 
 // These values are all hardcoded...for now!
 // Soon, we'll fetch them from the server!

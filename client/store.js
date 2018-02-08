@@ -13,7 +13,7 @@ export function gotMessagesFromServer(messageArr) {
 
 // INITIAL STATE
 const initialState = {
-  messages: []
+  messages: ['Hey there!']
 };
 
 // REDUCER

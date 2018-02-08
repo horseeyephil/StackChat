@@ -2,18 +2,32 @@ import React, { Component } from 'react';
 import Message from './Message';
 import NewMessageEntry from './NewMessageEntry';
 import axios from 'axios';
+import store, {gotMessagesFromServer} from '../store';
 
 export default class MessagesList extends Component {
 
   constructor () {
     super();
-    this.state = { messages: [] };
+    this.state = { messages: store.getState().messages };
   }
 
   componentDidMount () {
+    console.log(this.state.messages)
+
+    this.unsubscribe = store.subscribe(()=>{
+      this.setState(store.getState())
+    })
+    
     axios.get('/api/messages')
       .then(res => res.data)
-      .then(messages => this.setState({ messages }));
+      .then(messages => {
+        //this.setState({ messages })
+        store.dispatch(gotMessagesFromServer(messages))
+      });
+  }
+
+  componentWillUnmount () {
+    this.unsubscribe()
   }
 
   render () {
