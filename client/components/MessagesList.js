@@ -6,28 +6,27 @@ import store, {gotMessagesFromServer} from '../store';
 
 export default class MessagesList extends Component {
 
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = { messages: store.getState().messages };
   }
 
   componentDidMount () {
-    console.log(this.state.messages)
 
-    this.unsubscribe = store.subscribe(()=>{
-      this.setState(store.getState())
-    })
-    
+    this.unsubscribe = store.subscribe( () => {
+      this.setState(store.getState());
+    });
+
     axios.get('/api/messages')
       .then(res => res.data)
       .then(messages => {
         //this.setState({ messages })
-        store.dispatch(gotMessagesFromServer(messages))
+        store.dispatch(gotMessagesFromServer(messages));
       });
   }
 
   componentWillUnmount () {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 
   render () {
@@ -41,7 +40,7 @@ export default class MessagesList extends Component {
         <ul className="media-list">
           { filteredMessages.map(message => <Message message={message} key={message.id} />) }
         </ul>
-        <NewMessageEntry />
+        <NewMessageEntry channelId={channelId} />
       </div>
     );
   }
