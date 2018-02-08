@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import store, {writeMessage, gotNewMessageFromServer} from '../store';
-import socket from '../socket';
+import store, {writeMessage, gotNewMessageFromServer, postMessage} from '../store';
+
 
 export default class NewMessageEntry extends Component {
 
@@ -9,6 +9,7 @@ export default class NewMessageEntry extends Component {
     super();
     this.state = {
       newMessageEntry: store.getState().newMessageEntry,
+      authorName: store.getState().authorName
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,13 +34,17 @@ export default class NewMessageEntry extends Component {
     evt.preventDefault();
     const content = this.state.newMessageEntry;
     const channelId = this.props.channelId;
+    const name = store.getState().authorName
 
-    axios.post('/api/messages', { content: content, channelId: channelId })
-    .then(res => res.data)
-    .then(message => {
-      store.dispatch(gotNewMessageFromServer(message));
-      socket.emit('new-message', message);
-    });
+    store.dispatch(postMessage(content, channelId, name)) //thunk version
+
+
+    // axios.post('/api/messages', { content: content, channelId: channelId })
+    // .then(res => res.data)
+    // .then(message => {
+    //   store.dispatch(gotNewMessageFromServer(message));
+    //   socket.emit('new-message', message);
+    // });
   }
 
   render () {

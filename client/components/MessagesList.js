@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Message from './Message';
 import NewMessageEntry from './NewMessageEntry';
 import axios from 'axios';
-import store, {gotMessagesFromServer} from '../store';
+import store, {gotMessagesFromServer, fetchMessages} from '../store';
+
 
 export default class MessagesList extends Component {
 
@@ -17,12 +18,15 @@ export default class MessagesList extends Component {
       this.setState(store.getState());
     });
 
-    axios.get('/api/messages')
-      .then(res => res.data)
-      .then(messages => {
-        //this.setState({ messages })
-        store.dispatch(gotMessagesFromServer(messages));
-      });
+    const thunk = fetchMessages()
+    store.dispatch(thunk)
+
+    // axios.get('/api/messages')
+    //   .then(res => res.data)
+    //   .then(messages => {
+    //     //this.setState({ messages })
+    //     store.dispatch(gotMessagesFromServer(messages));
+    //   });
   }
 
   componentWillUnmount () {
